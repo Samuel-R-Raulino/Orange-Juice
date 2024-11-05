@@ -16,7 +16,7 @@ janela.configure(bg="#C83436")
 
 fonte_padrao = ("Arial", 10)
 
-imagem_original = tk.PhotoImage(file="Orange_Juice.png")
+imagem_original = tk.PhotoImage(file="Pinto_de_Boi.jpg")
 
 logo = tk.Label(janela, image=imagem_original, bg="#C83436")
 logo.grid(column=0, row=0, columnspan=6, pady=10)
