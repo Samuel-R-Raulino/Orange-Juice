@@ -62,4 +62,5 @@ conteudo.pack(fill="both", expand=True)
 janela.grid_rowconfigure(4, weight=1)
 janela.grid_columnconfigure(5, weight=1)
 
+
 janela.mainloop()
