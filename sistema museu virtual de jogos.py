@@ -53,6 +53,12 @@ navegacao.grid(column=1, row=3, padx=10, pady=10)
 novidades.grid(column=2, row=3, padx=10, pady=10)
 biblioteca.grid(column=3, row=3, padx=10, pady=10)
 
+conteudo_frame = tk.Frame(janela, bg="white", bd=1, relief="solid")
+conteudo_frame.grid(row=4, column=0, columnspan=6, sticky="NSEW", padx=10, pady=10)
+
+conteudo = tk.Label(conteudo_frame, text="", font=fonte_padrao, bg="white", anchor="w", padx=10, pady=10)
+conteudo.pack(fill="both", expand=True)
+
 janela.grid_rowconfigure(4, weight=1)
 janela.grid_columnconfigure(5, weight=1)
 
