@@ -1,7 +1,10 @@
 import socket
 
 # Define o endereço IP e a porta do servidor
-SERVER_HOST = '192.168.56.1'  # Substitua pelo IP do servidor
+hostname = socket.gethostname()
+local_ip = socket.gethostbyname(hostname)
+
+SERVER_HOST = local_ip  # Substitua pelo IP do servidor
 SERVER_PORT = 12345
 
 # Cria o socket TCP
