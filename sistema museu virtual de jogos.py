@@ -9,7 +9,7 @@ clear()
 janela = tk.Tk()
 
 
-janela.title("Orange Juice")
+janela.title("Orange Juice")    
 janela.geometry("800x600")
 janela.configure(bg="#C83436")
 
