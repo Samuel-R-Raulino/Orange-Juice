@@ -16,10 +16,6 @@ janela.configure(bg="#C83436")
 
 fonte_padrao = ("Arial", 10)
 
-imagem_original = tk.PhotoImage(file="Pinto_de_Boi.jpg")
-
-logo = tk.Label(janela, image=imagem_original, bg="#C83436")
-logo.grid(column=0, row=0, columnspan=6, pady=10)
 
 titulo = tk.Label(janela, text="Orange Juice Online Games", font=("Arial", 29, "bold"), bg="#C83436", fg="white", padx=5, pady=1)
 titulo.grid(row=1, column=0, columnspan=6, sticky="we")
