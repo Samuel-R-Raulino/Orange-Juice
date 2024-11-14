@@ -103,7 +103,6 @@ def exibir_interface_principal():
     janela.grid_rowconfigure(4, weight=1)
     janela.grid_columnconfigure(5, weight=1)
 
-
 janela = tk.Tk()
 janela.title("Orange Juice")    
 janela.geometry("800x600")

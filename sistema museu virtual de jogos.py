@@ -1,5 +1,6 @@
 import os
 import tkinter as tk
+from cadastro import main 
 
 def clear():
     os.system('cls')
@@ -26,7 +27,7 @@ subtitulo = tk.Label(janela, text="Bem-vindo ao nosso sistema virtual de jogos o
 subtitulo.grid(row=2, column=0, columnspan=6, sticky="we")
 # Funções dos botões
 def _conta():
-    print("conta")
+    main()
 
 def _navegacao():
     print("navegação")
