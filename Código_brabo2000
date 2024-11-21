@@ -1,0 +1,206 @@
+from tkinter import *
+from tkinter import messagebox
+import sqlite3
+from PIL import Image, ImageTk
+
+# Banco de dados e simulação do estado do sistema
+def conectar_bd():
+    conn = sqlite3.connect('usuarios.db')
+    cursor = conn.cursor()
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS usuarios (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        usuario TEXT NOT NULL UNIQUE,
+        senha TEXT NOT NULL
+    )""")
+    conn.commit()
+    return conn
+
+usuario_logado = None  # Estado do usuário logado
+jogos_adquiridos = []  # Jogos adquiridos
+
+# Dados fictícios
+catalogo_jogos = [
+    {"nome": "Resident Evil", "genero": "Survival Horror"},
+    {"nome": "The Witcher 3", "genero": "RPG"},
+    {"nome": "Hades", "genero": "Rogue-Like"}
+]
+
+novidades = [
+    {"nome": "Novo DLC de Cyberpunk", "genero": "RPG de Ação"},
+    {"nome": "Lançamento de Starfield", "genero": "RPG Espacial"}
+]
+
+window = Tk()
+
+class Application():
+    def __init__(self):
+        self.window = window
+        self.criar_gradiente_fundo()
+        self.tela()
+        self.frames_da_tela()
+        self.widgets()
+        conectar_bd()
+        window.mainloop()
+
+    def criar_gradiente_fundo(self):
+        canvas = Canvas(self.window, width=700, height=500)
+        canvas.place(relx=0, rely=0)
+
+        # Definindo as cores do gradiente
+        laranja_claro = "#FFA500"  # Laranja claro
+        laranja_escuro = "#800000"  # Laranja escuro
+
+        # Criando um gradiente vertical com retângulos de cor suave
+        for i in range(500):
+            color = self.interpolate_color(laranja_claro, laranja_escuro, i / 500)
+            canvas.create_line(0, i, 700, i, fill=color)
+
+    def interpolate_color(self, color1, color2, factor):
+        """
+        Função para interpolar entre duas cores (em formato hexadecimal).
+        """
+        rgb1 = [int(color1[i:i+2], 16) for i in (1, 3, 5)]
+        rgb2 = [int(color2[i:i+2], 16) for i in (1, 3, 5)]
+        interpolated_rgb = [int(rgb1[i] + (rgb2[i] - rgb1[i]) * factor) for i in range(3)]
+        return f"#{interpolated_rgb[0]:02x}{interpolated_rgb[1]:02x}{interpolated_rgb[2]:02x}"
+
+    def tela(self):
+        self.window.title("Orange Juice")
+        self.window.geometry("700x500")
+        self.window.resizable(False, False)
+
+    def frames_da_tela(self):
+        self.frame1 = Frame(self.window, bd=4, bg="White", highlightbackground="Black", highlightthickness=3)
+        self.frame1.place(relx=0.02, rely=0.02, relwidth=0.96, relheight=0.07)
+
+        self.opitions = Frame(self.window, bd=4, bg="#dedada", highlightbackground="Black", highlightthickness=3)
+        self.opitions.place(relx=0.02, rely=0.09, relwidth=0.96, relheight=0.07)
+
+        self.frame2 = Frame(self.window, bd=4, bg="White", highlightbackground="Black", highlightthickness=3)
+        self.frame2.place(relx=0.02, rely=0.2, relwidth=0.96, relheight=0.75)
+
+    def widgets(self):
+        self.bt1 = Button(self.opitions, text="Conta", font=("Arial", 14), bg="#FF914B", command=self.mostrar_conta)
+        self.bt1.place(relx=0, rely=0, relwidth=0.2, relheight=1)
+
+        self.bt2 = Button(self.opitions, text="Novidades", font=("Arial", 14), bg="#FF914B", command=self.mostrar_novidades)
+        self.bt2.place(relx=0.2, rely=0, relwidth=0.2, relheight=1)
+
+        self.bt3 = Button(self.opitions, text="Navegação", font=("Arial", 14), bg="#FF914B", command=self.mostrar_navegacao)
+        self.bt3.place(relx=0.4, rely=0, relwidth=0.2, relheight=1)
+
+        self.bt4 = Button(self.opitions, text="Biblioteca", font=("Arial", 14), bg="#FF914B", command=self.mostrar_biblioteca)
+        self.bt4.place(relx=0.6, rely=0, relwidth=0.2, relheight=1)
+
+        self.texto1 = Label(self.frame1, text="Bem-vindo ao nosso sistema virtual de jogos online!", font=("Arial", 14), bg="White")
+        self.texto1.place(relx=0.1, rely=0, relwidth=0.75, relheight=1)
+
+    def limpar_frame2(self):
+        for widget in self.frame2.winfo_children():
+            widget.destroy()
+
+    def mostrar_conta(self):
+        self.limpar_frame2()
+        global usuario_logado
+        if not usuario_logado:
+            self.mostrar_login_cadastro()
+        else:
+            Label(self.frame2, text=f"Bem-vindo, {usuario_logado}!", font=("Arial", 14), bg="White").pack(pady=10)
+            Label(self.frame2, text="Descrição do perfil", font=("Arial", 12), bg="White").pack(pady=5)
+            Button(self.frame2, text="Sair", font=("Arial", 14), bg="#FF914B", command=self.sair).pack(pady=10)
+
+    def mostrar_login_cadastro(self):
+        # Layout dividido em duas colunas
+        login_frame = Frame(self.frame2, bg="White")
+        login_frame.place(relx=0.05, rely=0.1, relwidth=0.4, relheight=0.8)
+
+        cadastro_frame = Frame(self.frame2, bg="White")
+        cadastro_frame.place(relx=0.55, rely=0.1, relwidth=0.4, relheight=0.8)
+
+        # Login (à esquerda)
+        Label(login_frame, text="Login", font=("Arial", 16), bg="White").pack(pady=5)
+        Label(login_frame, text="Usuário:", font=("Arial", 12), bg="White").pack(pady=5)
+        entrada_usuario = Entry(login_frame, font=("Arial", 12))
+        entrada_usuario.pack()
+
+        Label(login_frame, text="Senha:", font=("Arial", 12), bg="White").pack(pady=5)
+        entrada_senha = Entry(login_frame, font=("Arial", 12), show="*")
+        entrada_senha.pack()
+
+        Button(login_frame, text="Login", font=("Arial", 12), bg="#FF914B",
+               command=lambda: self.login(entrada_usuario.get(), entrada_senha.get())).pack(pady=10)
+
+        # Cadastro (à direita)
+        Label(cadastro_frame, text="Registrar", font=("Arial", 16), bg="White").pack(pady=10)
+        Label(cadastro_frame, text="Usuário:", font=("Arial", 12), bg="White").pack(pady=5)
+        entrada_reg_usuario = Entry(cadastro_frame, font=("Arial", 12))
+        entrada_reg_usuario.pack()
+
+        Label(cadastro_frame, text="Senha:", font=("Arial", 12), bg="White").pack(pady=5)
+        entrada_reg_senha = Entry(cadastro_frame, font=("Arial", 12), show="*")
+        entrada_reg_senha.pack()
+
+        Label(cadastro_frame, text="Confirmar Senha:", font=("Arial", 12), bg="White").pack(pady=5)
+        entrada_reg_confirmar = Entry(cadastro_frame, font=("Arial", 12), show="*")
+        entrada_reg_confirmar.pack()
+
+        Button(cadastro_frame, text="Registrar-se", font=("Arial", 12), bg="#FF914B",
+               command=lambda: self.cadastrar(entrada_reg_usuario.get(), entrada_reg_senha.get(),
+                                              entrada_reg_confirmar.get())).pack(pady=10)
+
+    def login(self, usuario, senha):
+        conn = conectar_bd()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM usuarios WHERE usuario = ? AND senha = ?", (usuario, senha))
+        resultado = cursor.fetchone()
+        conn.close()
+
+        if resultado:
+            global usuario_logado
+            usuario_logado = usuario
+            messagebox.showinfo("Sucesso", "Login realizado com sucesso!")
+            self.mostrar_conta()
+        else:
+            messagebox.showerror("Erro", "Usuário ou senha inválidos!")
+
+    def cadastrar(self, usuario, senha, confirmar_senha):
+        if senha != confirmar_senha:
+            messagebox.showerror("Erro", "As senhas não coincidem!")
+            return
+
+        conn = conectar_bd()
+        cursor = conn.cursor()
+        try:
+            cursor.execute("INSERT INTO usuarios (usuario, senha) VALUES (?, ?)", (usuario, senha))
+            conn.commit()
+            messagebox.showinfo("Sucesso", "Cadastro realizado com sucesso!")
+            self.mostrar_conta()
+        except sqlite3.IntegrityError:
+            messagebox.showerror("Erro", "Usuário já existe!")
+        conn.close()
+
+    def sair(self):
+        global usuario_logado
+        usuario_logado = None
+        self.mostrar_conta()
+
+    def mostrar_novidades(self):
+        self.limpar_frame2()
+        for novidade in novidades:
+            Label(self.frame2, text=f"{novidade['nome']} - {novidade['genero']}", font=("Arial", 12), bg="White").pack(pady=10)
+
+    def mostrar_navegacao(self):
+        self.limpar_frame2()
+        for jogo in catalogo_jogos:
+            Label(self.frame2, text=f"{jogo['nome']} - {jogo['genero']}", font=("Arial", 12), bg="White").pack(pady=10)
+
+    def mostrar_biblioteca(self):
+        self.limpar_frame2()
+        if jogos_adquiridos:
+            for jogo in jogos_adquiridos:
+                Label(self.frame2, text=f"{jogo['nome']} - {jogo['genero']}", font=("Arial", 12), bg="White").pack(pady=10)
+        else:
+            Label(self.frame2, text="Você ainda não adquiriu nenhum de nossos produtos. Clique aqui para adquirir.",
+                  font=("Arial", 12), fg="blue", bg="White", cursor="hand2").pack(pady=10)
+Application()
