@@ -48,7 +48,7 @@ CREATE TABLE devs (
 
     desenvolvedor_id INT PRIMARY KEY,
     nome VARCHAR(255),
-    registro INT
+    registro INT UNIQUE
 
 );
 
