@@ -1,0 +1,85 @@
+CREATE DATABASE orangeJuice;
+
+USE orangeJuice
+
+CREATE TABLE jogos (
+
+    jogo_id INT PRIMARY KEY ,
+    nomeJogo VARCHAR (100),
+    descricao TEXT,
+    price DECIMAL (10, 2) NOT NULL,
+    data_lanc DATE,
+    genero VARCHAR (69)
+
+);
+
+CREATE TABLE usuario ( 
+
+    user_id INT PRIMARY KEY ,
+    username VARCHAR (69) NOT NULL,
+    email VARCHAR (255) NOT NULL UNIQUE,
+    senha VARCHAR (50) NOT NULL,
+    conta_data TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+);
+
+CREATE TABLE compra (
+
+    compra_id INT PRIMARY KEY,
+    user_id INT,
+    jogo_id INT,
+    data_compra TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (jogo_id) REFERENCES jogos(jogo_id),
+    FOREIGN KEY (user_id) REFERENCES usuario(user_id)
+
+);
+
+CREATE TABLE biblioteca (
+
+    biblioteca_id INT PRIMARY KEY,
+    jogo_id INT,
+    user_id INT,
+    FOREIGN KEY (jogo_id) REFERENCES jogos(jogo_id),
+    FOREIGN KEY (user_id) REFERENCES usuario(user_id)  
+
+);
+
+CREATE TABLE devs (
+
+    desenvolvedor_id INT PRIMARY KEY,
+    nome VARCHAR(255),
+    registro INT
+
+);
+
+CREATE TABLE noticias (
+
+    news_id INT PRIMARY KEY,
+    novidades VARCHAR(255),
+    descricao TEXT,
+    jogo_id INT,
+    FOREIGN KEY (jogo_id) REFERENCES jogos(jogo_id)    
+
+);
+
+CREATE TABLE categoria (
+
+    categoria_id INT PRIMARY KEY,
+    nome VARCHAR(255)
+
+);
+
+INSERT INTO categoria (categoria_id, nome)
+VALUES 
+(1, 'Ação'),
+(2, 'FPS'),
+(3, 'RPG'),
+(4, 'Estratégia'),
+(5, 'Esporte'),
+(6, 'Indie'),
+(7, 'Rogue-Like'),
+(8, 'Rogue-Lite'),
+(9, 'Simulação'),
+(10, 'Romance'),
+(11, 'Aventura'),
+(12, 'Corrida');
