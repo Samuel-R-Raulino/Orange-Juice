@@ -48,7 +48,7 @@ CREATE TABLE devs (
 
     desenvolvedor_id INT PRIMARY KEY,
     nome VARCHAR(255),
-    registro INT UNIQUE
+    registro INT
 
 );
 
@@ -66,6 +66,7 @@ CREATE TABLE categoria (
 
     categoria_id INT PRIMARY KEY,
     nome VARCHAR(255)
+    FOREIGN KEY (jogo_id) REFERENCES jogos(jogo_id)
 
 );
 
@@ -82,4 +83,7 @@ VALUES
 (9, 'Simulação'),
 (10, 'Romance'),
 (11, 'Aventura'),
-(12, 'Corrida');
+(12, 'Corrida'),
+(13, 'Cartas'),
+(14, 'Sobrevivência'),
+(15, 'Terror');
