@@ -65,7 +65,7 @@ CREATE TABLE noticias (
 CREATE TABLE categoria (
 
     categoria_id INT PRIMARY KEY,
-    nome VARCHAR(255)
+    nome VARCHAR(255),
     FOREIGN KEY (jogo_id) REFERENCES jogos(jogo_id)
 
 );
